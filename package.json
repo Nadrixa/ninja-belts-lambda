@@ -13,7 +13,8 @@
     "lint": "eslint --max-warnings 0",
     "pretest": "npm run build:test",
     "pretest:e2e": "npm run E2ETest:setupEnv",
-    "test": "jest --verbose",
+    "test": "npm-run-all -s -n test:unit test:e2e",
+    "test:unit": "jest --verbose",
     "test:e2e": "npm-run-all -c -s -n -l E2ETest:waitForEnv E2ETest:runTest E2ETest:cleanupEnv"
   },
   "keywords": [
