@@ -4,10 +4,17 @@
   "description": "Introductory project to testable AWS lambdas",
   "main": "index.js",
   "scripts": {
+    "build:test": "tsc -p tsconfig.test.json",
+    "deploy:offline": "sls offline --httpPort=3000 --lambdaPort=3002 --websocketPort=3001",
+    "E2ETest:setupEnv": "npm run deploy:offline &",
+    "E2ETest:waitForEnv": "wait-port 3000",
+    "E2ETest:runTest": "jest -c jest.config.e2e.js",
+    "E2ETest:cleanupEnv": "kill -9 $(lsof -t -i:3000)",
     "lint": "eslint --max-warnings 0",
     "pretest": "npm run build:test",
+    "pretest:e2e": "npm run E2ETest:setupEnv",
     "test": "jest --verbose",
-    "build:test": "tsc -p tsconfig.test.json"
+    "test:e2e": "npm-run-all -c -s -n -l E2ETest:waitForEnv E2ETest:runTest E2ETest:cleanupEnv"
   },
   "keywords": [
     "aws",
@@ -28,18 +35,25 @@
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
-    "@types/jest": "^27.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.31.1",
-    "eslint": "^7.32.0",
-    "eslint-config-standard-with-typescript": "^21.0.1",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "husky": "^4.3.8",
-    "jest": "^27.2.0",
-    "lint-staged": "^11.1.2",
-    "ts-jest": "^27.0.5",
-    "typescript": "^4.4.3"
+    "@types/aws-lambda": "8.10.83",
+    "@types/jest": "27.0.1",
+    "@typescript-eslint/eslint-plugin": "4.31.1",
+    "axios": "0.21.4",
+    "eslint": "7.32.0",
+    "eslint-config-standard-with-typescript": "21.0.1",
+    "eslint-plugin-import": "2.24.2",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-promise": "5.1.0",
+    "husky": "4.3.8",
+    "jest": "27.2.0",
+    "lint-staged": "11.1.2",
+    "npm-run-all": "4.1.5",
+    "serverless": "2.59.0",
+    "serverless-offline": "8.2.0",
+    "serverless-plugin-typescript": "2.0.0",
+    "ts-jest": "27.0.5",
+    "typescript": "4.4.3",
+    "wait-port": "0.2.9"
   },
   "husky": {
     "pre-commit": "lint-staged"

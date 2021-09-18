@@ -1,0 +1,23 @@
+service: Ninja-Belts
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  timeout: 60
+
+
+functions:
+  retrieveBeltPoints:
+    handler: ./src/retrieveBeltPoints.handler
+    name: belt-points
+    description: function that returns points needed to reach given belt color
+    events:
+      - http:
+          path: belts/{color}/points
+          method: get
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
