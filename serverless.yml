@@ -10,7 +10,7 @@ provider:
 
 functions:
   retrieveBeltPoints:
-    handler: ./src/retrieveBeltPoints.handler
+    handler: ./src/belts/retrieveBeltPoints.handler
     name: belt-points
     description: function that returns points needed to reach given belt color
     events:
