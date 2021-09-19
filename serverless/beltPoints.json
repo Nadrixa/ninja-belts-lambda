@@ -1,0 +1,26 @@
+[
+    {
+        "color": "yellow",
+        "points": 100
+    },
+    {
+        "color": "orange",
+        "points": 500
+    },
+    {
+        "color": "green",
+        "points": 1500
+    },
+    {
+        "color": "blue",
+        "points": 4000
+    },
+    {
+        "color": "brown",
+        "points": 10000
+    },
+    {
+        "color": "black",
+        "points": 20000
+    }
+]

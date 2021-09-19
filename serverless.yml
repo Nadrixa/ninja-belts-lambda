@@ -18,6 +18,41 @@ functions:
           path: belts/{color}/points
           method: get
 
+custom:
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+    seed:
+      beltPoints:
+        sources:
+          - table: BeltPoints
+            sources: [./serverless/beltPoints.json]
+
+resources:
+  Resources:
+    BeltPointsDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: BeltPoints
+        AttributeDefinitions:
+          - AttributeName: color
+            AttributeType: S
+        KeySchema:
+          - AttributeName: color
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
 plugins:
   - serverless-plugin-typescript
+  - serverless-dynamodb-local
   - serverless-offline

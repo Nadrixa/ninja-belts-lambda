@@ -5,17 +5,25 @@
   "main": "index.js",
   "scripts": {
     "build:test": "tsc -p tsconfig.test.json",
-    "deploy:offline": "sls offline --httpPort=3000 --lambdaPort=3002 --websocketPort=3001",
+    "dynamoDB:install": "sls dynamodb install",
+    "dynamoDB:start": "sls dynamodb start",
+    "deploy:offline": "sls offline start --httpPort=3000 --lambdaPort=3002 --websocketPort=3001",
     "lint": "eslint --max-warnings 0",
     "pretest": "npm run build:test",
-    "test": "npm-run-all -s -n test:unit test:e2e",
-    "test:unit": "jest --verbose",
+    "test": "npm-run-all -s -n test:unit test:it test:e2e",
+    "pretest:it": "npm run ITTest:setupEnv",
+    "test:it": "npm-run-all -l -n -s -c ITTest:waitForEnv ITTest:runTest ITTest:cleanupEnv",
+    "ITTest:setupEnv": "npm-run-all -l -n -s dynamoDB:install dynamoDB:start &",
+    "ITTest:waitForEnv": "wait-port 8000",
+    "ITTest:runTest": "jest -c jest.config.IT.js --coverage",
+    "ITTest:cleanupEnv": "kill $(lsof -t -i:8000)",
+    "test:unit": "jest --verbose --coverage",
     "pretest:e2e": "npm run E2ETest:setupEnv",
     "test:e2e": "npm-run-all -c -s -n -l E2ETest:waitForEnv E2ETest:runTest E2ETest:cleanupEnv",
     "E2ETest:setupEnv": "npm run deploy:offline &",
     "E2ETest:waitForEnv": "wait-port 3000",
     "E2ETest:runTest": "jest -c jest.config.e2e.js",
-    "E2ETest:cleanupEnv": "kill -9 $(lsof -t -i:3000)"
+    "E2ETest:cleanupEnv": "kill $(lsof -t -i:3000)"
   },
   "keywords": [
     "aws",
@@ -33,7 +41,9 @@
     }
   ],
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "aws-sdk": "2.991.0"
+  },
   "devDependencies": {
     "@types/aws-lambda": "8.10.83",
     "@types/jest": "27.0.1",
@@ -49,6 +59,7 @@
     "lint-staged": "11.1.2",
     "npm-run-all": "4.1.5",
     "serverless": "2.59.0",
+    "serverless-dynamodb-local": "0.2.40",
     "serverless-offline": "8.2.0",
     "serverless-plugin-typescript": "2.0.0",
     "ts-jest": "27.0.5",
