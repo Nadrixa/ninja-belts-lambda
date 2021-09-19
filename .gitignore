@@ -1,8 +1,10 @@
 node_modules
+coverage
 
 .DS_store
 .vscode
 .ideas
 
 .build
+.dynamodb
 function
