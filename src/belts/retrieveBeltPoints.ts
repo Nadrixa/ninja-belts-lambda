@@ -1,18 +1,21 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 
-import { inMemoryBeltsRepository } from "./infraestructure/InMemoryBeltPointsRepositiory";
-
 import { retrieveBeltPointsWith } from "./application/retrieveBeltPoints";
 import { NotDefinedColorError } from "./domain/Colors";
+import { buildConfigurationWith } from "./Configuration";
+import { dynamoDBBeltPointsRepository } from "./infraestructure/DynamoDBBeltPointsRepository";
 
-const retrieveBeltPointsFor = retrieveBeltPointsWith(inMemoryBeltsRepository());
+const configuration = buildConfigurationWith(process.env);
+const dynamoDBRepository = dynamoDBBeltPointsRepository(configuration.dynamoDB, configuration.credentials);
+
+const retrieveBeltPointsFor = retrieveBeltPointsWith(dynamoDBRepository);
 
 export async function handler (event: APIGatewayEvent): Promise<APIGatewayProxyResult> {
 
     try {
         return {
             statusCode: 200,
-            body: retrieveBeltPointsFor(event.pathParameters?.color ?? '').toString()
+            body: (await retrieveBeltPointsFor(event.pathParameters?.color ?? '')).toString()
         }
     } catch (error: any) {
         return {
