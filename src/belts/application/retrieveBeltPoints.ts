@@ -1,11 +1,10 @@
 import { Belt } from "../domain/Belt";
 import { BeltPointsRepository } from "../domain/BeltPointsRepository";
 
-export function retrieveBeltPointsWith(beltPointsRepository: BeltPointsRepository): (color: string) => number {
+export function retrieveBeltPointsWith(beltPointsRepository: BeltPointsRepository): (color: string) => Promise<number> {
 
-    return (color) => {
-
+    return async (color) => {
         const belt = new Belt(color, beltPointsRepository);
-        return belt.retrieveBeltPoints();
+        return await belt.retrieveBeltPoints();
     };
 }

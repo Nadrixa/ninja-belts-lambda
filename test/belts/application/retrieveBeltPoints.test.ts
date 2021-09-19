@@ -2,7 +2,7 @@ import { retrieveBeltPointsWith } from "../../../src/belts/application/retrieveB
 
 describe('BeltPointsRetriever use case', () => {
 
-    it('Should throw exception when given color is not defined', () => {
+    it('Should throw exception when given color is not defined', async () => {
 
         // Given
         const beltPointsRetrieverStub = {
@@ -12,10 +12,10 @@ describe('BeltPointsRetriever use case', () => {
         const retrieveBeltPointsFor = retrieveBeltPointsWith(beltPointsRetrieverStub);
 
         // When + Then
-        expect(() => retrieveBeltPointsFor(beltColor)).toThrow();
+        await expect(retrieveBeltPointsFor(beltColor)).rejects.toThrow();
     });
 
-    it('Should call to points retriever and return points for defined color', () => {
+    it('Should call to points retriever and return points for defined color', async () => {
 
         // Given
         const expectedPoints = 100;
@@ -26,7 +26,7 @@ describe('BeltPointsRetriever use case', () => {
         const retrieveBeltPointsFor = retrieveBeltPointsWith(beltPointsRetrieverStub);
 
         // When
-        const points = retrieveBeltPointsFor(beltColor);
+        const points = await retrieveBeltPointsFor(beltColor);
 
         // Then
         expect(points).toBe(expectedPoints);

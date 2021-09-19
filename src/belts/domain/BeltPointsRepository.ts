@@ -1,3 +1,3 @@
 export type BeltPointsRepository = {
-    retrievePointsOf: (beltColor: string) => number
+    retrievePointsOf: (beltColor: string) => number | Promise<number>
 };
