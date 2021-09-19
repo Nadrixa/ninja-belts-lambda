@@ -7,7 +7,7 @@ enum Colors {
     black
 };
 
-export function validateThis(color: string): void {
+export function checkDefinedThis(color: string): void {
 
     if(!(color in Colors)) {
         throw new NotDefinedColorError(color);

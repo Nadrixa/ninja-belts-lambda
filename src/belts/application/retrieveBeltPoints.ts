@@ -1,10 +1,11 @@
-import { validateThis } from "../domain/Belts";
-import { RetrievePointsOf } from "../domain/BeltPointsRetriever";
+import { Belt } from "../domain/Belt";
+import { BeltPointsRepository } from "../domain/BeltPointsRepository";
 
-export function retrieveBeltPointsWith(retrieveBeltPointsFor: RetrievePointsOf): (color: string) => number {
+export function retrieveBeltPointsWith(beltPointsRepository: BeltPointsRepository): (color: string) => number {
 
     return (color) => {
-        validateThis(color);
-        return retrieveBeltPointsFor(color);
+
+        const belt = new Belt(color, beltPointsRepository);
+        return belt.retrieveBeltPoints();
     };
 }

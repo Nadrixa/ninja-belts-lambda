@@ -5,7 +5,9 @@ describe('BeltPointsRetriever use case', () => {
     it('Should throw exception when given color is not defined', () => {
 
         // Given
-        const beltPointsRetrieverStub = jest.fn();
+        const beltPointsRetrieverStub = {
+            retrievePointsOf: jest.fn()
+        };
         const beltColor = 'someColor';
         const retrieveBeltPointsFor = retrieveBeltPointsWith(beltPointsRetrieverStub);
 
@@ -17,7 +19,9 @@ describe('BeltPointsRetriever use case', () => {
 
         // Given
         const expectedPoints = 100;
-        const beltPointsRetrieverStub = jest.fn(() => expectedPoints);
+        const beltPointsRetrieverStub = {
+            retrievePointsOf: jest.fn(() => expectedPoints)
+        };
         const beltColor = 'yellow';
         const retrieveBeltPointsFor = retrieveBeltPointsWith(beltPointsRetrieverStub);
 
@@ -26,7 +30,7 @@ describe('BeltPointsRetriever use case', () => {
 
         // Then
         expect(points).toBe(expectedPoints);
-        expect(beltPointsRetrieverStub).toBeCalledTimes(1);
-        expect(beltPointsRetrieverStub).toBeCalledWith(beltColor);
+        expect(beltPointsRetrieverStub.retrievePointsOf).toBeCalledTimes(1);
+        expect(beltPointsRetrieverStub.retrievePointsOf).toBeCalledWith(beltColor);
     });
 });

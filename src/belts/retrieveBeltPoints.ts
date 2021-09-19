@@ -1,11 +1,11 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 
-import { inMemoryRetrievePointsOf } from "./infraestructure/InMemoryBeltPointsRetriever";
+import { inMemoryBeltsRepository } from "./infraestructure/InMemoryBeltPointsRepositiory";
 
 import { retrieveBeltPointsWith } from "./application/retrieveBeltPoints";
-import { NotDefinedColorError } from "./domain/Belts";
+import { NotDefinedColorError } from "./domain/Colors";
 
-const retrieveBeltPointsFor = retrieveBeltPointsWith(inMemoryRetrievePointsOf);
+const retrieveBeltPointsFor = retrieveBeltPointsWith(inMemoryBeltsRepository());
 
 export async function handler (event: APIGatewayEvent): Promise<APIGatewayProxyResult> {
 
