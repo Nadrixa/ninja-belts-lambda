@@ -6,16 +6,16 @@
   "scripts": {
     "build:test": "tsc -p tsconfig.test.json",
     "deploy:offline": "sls offline --httpPort=3000 --lambdaPort=3002 --websocketPort=3001",
+    "lint": "eslint --max-warnings 0",
+    "pretest": "npm run build:test",
+    "test": "npm-run-all -s -n test:unit test:e2e",
+    "test:unit": "jest --verbose",
+    "pretest:e2e": "npm run E2ETest:setupEnv",
+    "test:e2e": "npm-run-all -c -s -n -l E2ETest:waitForEnv E2ETest:runTest E2ETest:cleanupEnv",
     "E2ETest:setupEnv": "npm run deploy:offline &",
     "E2ETest:waitForEnv": "wait-port 3000",
     "E2ETest:runTest": "jest -c jest.config.e2e.js",
-    "E2ETest:cleanupEnv": "kill -9 $(lsof -t -i:3000)",
-    "lint": "eslint --max-warnings 0",
-    "pretest": "npm run build:test",
-    "pretest:e2e": "npm run E2ETest:setupEnv",
-    "test": "npm-run-all -s -n test:unit test:e2e",
-    "test:unit": "jest --verbose",
-    "test:e2e": "npm-run-all -c -s -n -l E2ETest:waitForEnv E2ETest:runTest E2ETest:cleanupEnv"
+    "E2ETest:cleanupEnv": "kill -9 $(lsof -t -i:3000)"
   },
   "keywords": [
     "aws",
