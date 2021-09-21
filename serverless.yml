@@ -59,6 +59,19 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+    NinjaBeltsDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: NinjaBelts
+        AttributeDefinitions:
+          - AttributeName: ninjaId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: ninjaId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 
 plugins:
   - serverless-plugin-typescript
