@@ -13,6 +13,7 @@
       "skipLibCheck": true,
       "strictNullChecks": true,
       "forceConsistentCasingInFileNames": true,
+      "allowJs": true,
       "rootDir": "./"
     },
     "include": ["./src/**/*", "./test/**/*"],

@@ -43,6 +43,10 @@ custom:
         sources:
           - table: BeltPoints
             sources: [./serverless/beltPoints.json]
+  serverless-offline-sns:
+    port: 4002
+    debug: false
+    accountId: 123456789012
 
 resources:
   Resources:
@@ -76,4 +80,5 @@ resources:
 plugins:
   - serverless-plugin-typescript
   - serverless-dynamodb-local
+  - serverless-offline-sns
   - serverless-offline
