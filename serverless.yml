@@ -17,6 +17,14 @@ functions:
       - http:
           path: belts/{color}/points
           method: get
+  assignBeltToNinja:
+    handler: ./src/belts/assignBeltToNinja.handler
+    name: assign-belt-to-ninja
+    description: function that assigns belt to ninja
+    events:
+      - http:
+          path: ninja/belt
+          method: post
 
 custom:
   dynamodb:
