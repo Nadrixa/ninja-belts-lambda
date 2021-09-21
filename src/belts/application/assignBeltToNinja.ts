@@ -9,7 +9,7 @@ export function assignBeltToNinjaWith(ninjaBeltsRepository: NinjaBeltsRepository
 
         const ninja = new Ninja(ninjaId, belt);
 
-        ninja.saveUsing(ninjaBeltsRepository);
-        ninja.notifyToOtherNinjasUsing(ninjaNotifier);
+        await ninja.saveUsing(ninjaBeltsRepository);
+        await ninja.notifyToOtherNinjasUsing(ninjaNotifier);
     };
 }

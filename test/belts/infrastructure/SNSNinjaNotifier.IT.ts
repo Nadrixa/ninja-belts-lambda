@@ -10,31 +10,34 @@ describe('SNS adapter for ninja notifier', () => {
 
     it('Should notify to other ninjas endpoint with ninjaId and belt', async () => {
 
-        // Given + setup
-        const ninjaId = 'EXXXX';
-        const belt = 'black';
-        const snsConfig = {
-            endpoint: 'http://localhost:4002',
-            region: 'localhost',
-            snsTopicArn: 'arn:aws:sns:us-east-1:123456789012:test-topic'
-        };
-        const credentials = {
-            accessKeyId: 'DEFAULT',
-            secretAccessKey: 'DEFAULT'
-        };
+        try {
+            // Given + setup
+            const ninjaId = 'EXXXX';
+            const belt = 'black';
+            const snsConfig = {
+                endpoint: 'http://localhost:4002',
+                region: 'localhost',
+                snsTopicArn: 'arn:aws:sns:us-east-1:123456789012:test-topic'
+            };
+            const credentials = {
+                accessKeyId: 'DEFAULT',
+                secretAccessKey: 'DEFAULT'
+            };
 
-        const SNSNotifier = SNSNinjaNotifierWith(snsConfig, credentials);
-        await initSNSAndSubscriberWith(snsConfig, credentials, 5000);
+            const SNSNotifier = SNSNinjaNotifierWith(snsConfig, credentials);
+            await initSNSAndSubscriberWith(snsConfig, credentials, 5000);
 
-        // When
-        await SNSNotifier.notifyToAll(ninjaId, belt);
+            // When
+            await SNSNotifier.notifyToAll(ninjaId, belt);
 
-        // Then
-        const message = await axios.get('http://localhost:5000/receivedMessage');
-        expect(message.data).toEqual(`${ninjaId} has reached ${belt} belt!`);
+            // Then
+            const message = await axios.get('http://localhost:5000/receivedMessage');
+            expect(message.data).toEqual(`${ninjaId} has reached ${belt} belt!`);
+        } finally {
+            // Cleanup
+            await closeSubscriber();
+        }
 
-        // Cleanup
-        await closeSubscriber();
     });
 });
 

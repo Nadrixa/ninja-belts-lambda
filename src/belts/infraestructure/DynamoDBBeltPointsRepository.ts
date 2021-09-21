@@ -16,7 +16,7 @@ export function dynamoDBBeltPointsRepository({table, endpoint, region}: DynamoDB
 
     const dynamoDBClient = new DynamoDB.DocumentClient({
         endpoint,
-        ...credentials,
+        credentials,
         region,
     });
 

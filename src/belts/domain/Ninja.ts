@@ -39,6 +39,6 @@ function checkValidThis(ninjaId?: string) {
 
 export class NotValidNinjaIdError extends Error {
     constructor() {
-        super(`Ninja id should be defined!`);
+        super('Ninja id should be defined!');
     }
 }

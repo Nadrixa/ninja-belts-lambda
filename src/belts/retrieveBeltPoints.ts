@@ -6,7 +6,7 @@ import { buildConfigurationWith } from "./Configuration";
 import { dynamoDBBeltPointsRepository } from "./infraestructure/DynamoDBBeltPointsRepository";
 
 const configuration = buildConfigurationWith(process.env);
-const dynamoDBRepository = dynamoDBBeltPointsRepository(configuration.dynamoDB, configuration.credentials);
+const dynamoDBRepository = dynamoDBBeltPointsRepository({...configuration.dynamoDB, table: configuration.beltPointsTable}, configuration.credentials);
 
 const retrieveBeltPointsFor = retrieveBeltPointsWith(dynamoDBRepository);
 
