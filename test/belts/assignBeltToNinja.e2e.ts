@@ -1,25 +1,34 @@
 import { SNS } from "aws-sdk";
 import axios from "axios";
-
-import { closeSubscriber, initSubscriberIn } from "./support/httpSubscriber";
-
-import { buildConfigurationWith } from '../../src/belts/Configuration';
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 
+import { closeSubscriber, initSubscriberIn } from "./support/httpSubscriber";
+import { localAPIGateway } from "./support/retrieveLocalAPI";
+
+import { buildConfigurationWith } from '../../src/belts/Configuration';
+
 describe('Asssign belt to ninja', () => {
+
+    const apiGatewayEndpoint = localAPIGateway();
 
     it('Should return 204, save in dynamoDB and notify other ninjas when ninja and belt passed are right', async () => {
     
         try {
+            // Setup
+            process.env.DYNAMO_DB_ENDPOINT = 'http://localhost:4566';
+            process.env.AWS_REGION = 'us-east-1';
+            process.env.SNS_ENDPOINT = 'http://localhost:4566';
+            process.env.SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:000000000000:NinjasTopic';
+            const configuration = buildConfigurationWith(process.env);
+            await initDependenciesUsing(configuration);
+            
             // Given
             const belt = 'black';
             const ninjaId = 'EXXXX';
-            const configuration = buildConfigurationWith(process.env);
 
-            await initDependenciesUsing(configuration);
 
             // When
-            const response = await axios.post('http://localhost:3000/dev/ninja/belt', {
+            const response = await axios.post(`${apiGatewayEndpoint}/ninja/belt`, {
                 belt,
                 ninjaId
             });
@@ -55,7 +64,7 @@ describe('Asssign belt to ninja', () => {
 
         try {
             // When
-            await axios.post('http://localhost:3000/dev/ninja/belt', {
+            await axios.post(`${apiGatewayEndpoint}/ninja/belt`, {
                 belt,
                 ninjaId
             });
@@ -83,6 +92,6 @@ async function initDependenciesUsing(configuration: any) {
     await snsCli.subscribe({
         Protocol: 'http',
         TopicArn: configuration.sns.snsTopicArn,
-        Endpoint: `http://localhost:${subscriberPort}/ninjas`
+        Endpoint: `http://host.docker.internal:${subscriberPort}/ninjas`
     }).promise();
 }

@@ -7,4 +7,5 @@ coverage
 
 .build
 .dynamodb
+.serverless
 function

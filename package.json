@@ -5,28 +5,22 @@
   "main": "index.js",
   "scripts": {
     "build:test": "tsc -p tsconfig.test.json",
-    "dynamoDB:install": "sls dynamodb install",
-    "dynamoDB:start": "sls dynamodb start",
-    "dynamoDB:startForCI": "npm-run-all -l -n -s dynamoDB:install dynamoDB:start &",
-    "sns:start": "sls offline-sns start",
-    "sns:startForCI": "npm run sns:start &",
-    "deploy:offline": "sls offline start --httpPort=3000 --lambdaPort=3002 --websocketPort=3001",
+    "deploy:localstack": "sls deploy",
+    "localstack:stop": "docker stop localstack_main",
     "lint": "eslint --max-warnings 0",
     "pretest": "npm run build:test",
     "test": "npm-run-all -s -n test:unit test:it test:e2e",
     "pretest:it": "npm run ITTest:setupEnv",
-    "test:it": "npm-run-all -l -n -s -c ITTest:waitForEnv ITTest:runTest ITTest:cleanupEnv",
-    "ITTest:setupEnv": "npm-run-all -l -n -p sns:startForCI dynamoDB:startForCI &",
-    "ITTest:waitForEnv": "wait-port 8000",
+    "test:it": "npm-run-all -l -n -s -c ITTest:runTest ITTest:cleanupEnv",
+    "ITTest:setupEnv": "npm run deploy:localstack",
     "ITTest:runTest": "jest -c jest.config.IT.js --coverage",
-    "ITTest:cleanupEnv": "kill -9 $(lsof -t -i:8000) && kill -9 $(lsof -t -i:4002)",
+    "ITTest:cleanupEnv": "npm run localstack:stop",
     "test:unit": "jest --verbose --coverage",
     "pretest:e2e": "npm run E2ETest:setupEnv",
-    "test:e2e": "npm-run-all -c -s -n -l E2ETest:waitForEnv E2ETest:runTest E2ETest:cleanupEnv",
-    "E2ETest:setupEnv": "npm run deploy:offline &",
-    "E2ETest:waitForEnv": "wait-port 3000",
+    "test:e2e": "npm-run-all -c -s -n -l E2ETest:runTest E2ETest:cleanupEnv",
+    "E2ETest:setupEnv": "npm run deploy:localstack",
     "E2ETest:runTest": "jest -c jest.config.e2e.js",
-    "E2ETest:cleanupEnv": "kill $(lsof -t -i:3000)"
+    "E2ETest:cleanupEnv": "npm run localstack:stop"
   },
   "keywords": [
     "aws",
@@ -62,13 +56,11 @@
     "lint-staged": "11.1.2",
     "npm-run-all": "4.1.5",
     "serverless": "2.59.0",
-    "serverless-dynamodb-local": "0.2.40",
-    "serverless-offline": "8.2.0",
-    "serverless-offline-sns": "0.76.0",
+    "serverless-localstack": "0.4.34",
+    "serverless-plugin-test-helper": "2.6.4",
     "serverless-plugin-typescript": "2.0.0",
     "ts-jest": "27.0.5",
-    "typescript": "4.4.3",
-    "wait-port": "0.2.9"
+    "typescript": "4.4.3"
   },
   "husky": {
     "pre-commit": "lint-staged"

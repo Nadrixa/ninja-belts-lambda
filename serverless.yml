@@ -13,6 +13,10 @@ functions:
     handler: ./src/belts/retrieveBeltPoints.handler
     name: belt-points
     description: function that returns points needed to reach given belt color
+    environment:
+      DYNAMO_DB_ENDPOINT: http://172.17.0.2:4566
+      SNS_ENDPOINT: http://172.17.0.2:4566
+      AWS_REGION: us-east-1
     events:
       - http:
           path: belts/{color}/points
@@ -21,32 +25,21 @@ functions:
     handler: ./src/belts/assignBeltToNinja.handler
     name: assign-belt-to-ninja
     description: function that assigns belt to ninja
+    environment:
+      DYNAMO_DB_ENDPOINT: http://172.17.0.2:4566
+      SNS_ENDPOINT: http://172.17.0.2:4566
+      AWS_REGION: us-east-1
+      SNS_TOPIC_ARN: arn:aws:sns:us-east-1:000000000000:NinjasTopic
     events:
       - http:
           path: ninja/belt
           method: post
 
 custom:
-  dynamodb:
+  localstack:
     stages:
       - dev
-    start:
-      port: 8000
-      inMemory: true
-      heapInitial: 200m
-      heapMax: 1g
-      migrate: true
-      seed: true
-      convertEmptyValues: true
-    seed:
-      beltPoints:
-        sources:
-          - table: BeltPoints
-            sources: [./serverless/beltPoints.json]
-  serverless-offline-sns:
-    port: 4002
-    debug: false
-    accountId: 123456789012
+    autostart: true
 
 resources:
   Resources:
@@ -76,9 +69,12 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+    NinjasTopic:
+      Type: "AWS::SNS::Topic"
+      Properties:
+        TopicName: "NinjasTopic"
 
 plugins:
   - serverless-plugin-typescript
-  - serverless-dynamodb-local
-  - serverless-offline-sns
-  - serverless-offline
+  - serverless-plugin-test-helper
+  - serverless-localstack

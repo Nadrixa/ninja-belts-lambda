@@ -15,9 +15,9 @@ describe('SNS adapter for ninja notifier', () => {
             const ninjaId = 'EXXXX';
             const belt = 'black';
             const snsConfig = {
-                endpoint: 'http://localhost:4002',
-                region: 'localhost',
-                snsTopicArn: 'arn:aws:sns:us-east-1:123456789012:test-topic'
+                endpoint: 'http://localhost:4566',
+                region: 'us-east-1',
+                snsTopicArn: 'arn:aws:sns:us-east-1:000000000000:NinjasTopic'
             };
             const credentials = {
                 accessKeyId: 'DEFAULT',
@@ -54,6 +54,6 @@ async function initSNSAndSubscriberWith({endpoint, region, snsTopicArn}: {endpoi
     await snsCli.subscribe({
         Protocol: 'http',
         TopicArn: snsTopicArn,
-        Endpoint: `http://localhost:${subscriberPort}/ninjas`
+        Endpoint: `http://host.docker.internal:${subscriberPort}/ninjas`
     }).promise();
 }

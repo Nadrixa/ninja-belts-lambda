@@ -8,7 +8,7 @@ describe('DynamoDB adapter for NinjaBelts repository', () => {
 
         const ninjaId = 'EXXXX';
         const belt = 'black';
-        const dynamoDBConfig = {table: 'NinjaBelts', endpoint: 'http://localhost:8000', region: 'localhost'};
+        const dynamoDBConfig = {table: 'NinjaBelts', endpoint: 'http://localhost:4566', region: 'us-east-1'};
         const awsCredentials = {accessKeyId: 'DEFAULT', secretAccessKey: 'DEFAULT'};
         const documentClient = new DocumentClient({
             credentials: awsCredentials,
